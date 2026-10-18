@@ -1,6 +1,6 @@
 import unittest
 
-from campusflow.validation import validate_affected_users
+from campusflow.validation import validate_affected_users, validate_urgency
 
 class TestAffectedUsersValidation(unittest.TestCase):
     def test_accepts_positive_integer(self):
@@ -30,3 +30,35 @@ class TestAffectedUsersValidation(unittest.TestCase):
     def test_accepts_minimum_valid_integer(self):
         result = validate_affected_users(1)
         self.assertEqual(result, 1)
+
+class TestValidateUrgency(unittest.TestCase):
+    def test_rejects_empty_string(self):
+        with self.assertRaises(ValueError):
+            validate_urgency("")
+
+    def test_accepts_valid_input(self):
+        result = validate_urgency("low")
+        self.assertEqual(result, "low")
+
+    def test_accepts_upper_case_with_whitespaces(self):
+        result = validate_urgency("  High  ")
+        self.assertEqual(result, "high")
+
+    def test_accepts_upper_case(self):
+        result = validate_urgency("MEDIUM")
+        self.assertEqual(result, "medium")
+
+    def test_rejects_non_string(self):
+        with self.assertRaises(TypeError):
+            validate_urgency(5)
+
+    
+    def test_rejects_invalid_urgency_categories(self):
+        with self.assertRaises(ValueError):
+            validate_urgency("critical")
+
+    def test_rejects_empty_string_with_whitespace(self):
+        with self.assertRaises(ValueError):
+            validate_urgency(" ")
+
+    
