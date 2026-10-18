@@ -21,3 +21,20 @@ Return value:first it checks if its a number and it returns the number back if p
 Errors: if theres an error it returns a the actual error raised 
 
 Side effects: None. The function does not modify external data, print messages, or read user input.
+
+## Validation Function Contracts
+
+### validate_affected_users(value)
+- Accepts: Positive integers only.
+- Returns: The validated integer.
+- Raises TypeError: When the input is not exactly an integer.
+- Raises ValueError: When the integer is less than 1.
+- Side effects: None.
+
+### validate_urgency(value)
+- Accepts: Strings representing low, medium, or high.
+- Normalization: Removes surrounding whitespace and converts to lowercase.
+- Returns: The normalized urgency string.
+- Raises TypeError: When the input is not a string.
+- Raises ValueError: When the urgency is invalid.
+- Side effects: None.
