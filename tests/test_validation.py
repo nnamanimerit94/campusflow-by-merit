@@ -1,6 +1,6 @@
 import unittest
 
-from campusflow.validation import validate_affected_users, validate_urgency
+from campusflow.validation import validate_affected_users, validate_urgency, validate_title, validate_category
 
 class TestAffectedUsersValidation(unittest.TestCase):
     def test_accepts_positive_integer(self):
@@ -61,4 +61,40 @@ class TestValidateUrgency(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_urgency(" ")
 
-    
+class TestValidateTitle(unittest.TestCase):
+    def test_accepts_cleaned_input(self):
+        result = validate_title("   merit    ")
+        self.assertEqual(result, "merit")
+
+    def test_rejects_white_spaces(self):
+        with self.assertRaises(ValueError):
+            validate_title("     ")
+
+    def test_rejects_non_string(self):
+        with self.assertRaises(TypeError):
+            validate_title(5)
+
+        
+    def test_rejects_empty_spaces(self):
+        with self.assertRaises(ValueError):
+            validate_title("")
+
+    def test_accepts_incoming_input_case(self):
+        result = validate_title(" The wifi is Down,  merit    ")
+        self.assertEqual(result, "The wifi is Down,  merit")
+
+class TestValidateCategory(unittest.TestCase):
+    def test_accepts_uppercase_string(self):
+        result = validate_category("HARDWARE")
+        self.assertEqual(result, "Hardware")
+
+    def test_accepts_cleaned_input(self):
+        result = validate_category("  SOFTWARE  ")
+        self.assertEqual(result, "Software")
+
+    def test_rejects_empty_input(self):
+        with self.assertRaises(ValueError):
+            validate_category("")
+
+
+

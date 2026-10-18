@@ -38,3 +38,37 @@ Side effects: None. The function does not modify external data, print messages, 
 - Raises TypeError: When the input is not a string.
 - Raises ValueError: When the urgency is invalid.
 - Side effects: None.
+
+### Title Validation
+
+Function: validate_title(value)
+
+Input: A string representing a ticket title.
+
+Rules:
+- Must be a string.
+- Must not be empty or whitespace-only.
+- Remove surrounding whitespace.
+- Preserve capitalization.
+
+Output: Cleaned title string.
+
+Errors:
+- TypeError for non-string inputs.
+- ValueError for blank titles.
+
+Side effects: None.
+
+### Ticket ID Generation
+
+Decision: Generate the next ticket ID using the highest existing ID + 1.
+
+Rules:
+- First ticket receives T001.
+- IDs use the format T001, T002, T003, etc.
+- Missing numbers are not reused while higher IDs exist.
+- Ticket deletion is not supported in the MVP.
+
+Trade-off:
+This approach is simple but could reuse the highest ID if that
+ticket were deleted. A persistent counter may be added later.
