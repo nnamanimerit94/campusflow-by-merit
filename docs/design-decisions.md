@@ -153,3 +153,21 @@ Use Python's built-in json module to avoid external dependencies.
 - Atomic file replacement is not yet implemented.
 - The current loader checks JSON syntax but does not fully validate
   the structure of saved ticket records.
+
+  ## Ticket Workflow
+
+### Functions
+- find_ticket(tickets, ticket_id)
+- assign_ticket(tickets, ticket_id, mentor)
+- update_ticket_status(tickets, ticket_id, new_status)
+- reopen_ticket(tickets, ticket_id)
+
+### Business Rules
+- Tickets begin with status `open`.
+- Tickets must be assigned before moving to `in_progress`.
+- Valid transitions are `open` → `in_progress` → `resolved`.
+- Resolved tickets must be explicitly reopened before further changes.
+- Reopening changes the status to `open` and preserves the assignment.
+- Repeating the same status transition raises ValueError.
+- Unknown ticket IDs raise KeyError.
+- Assignment does not automatically change ticket status.
