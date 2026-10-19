@@ -171,3 +171,19 @@ Use Python's built-in json module to avoid external dependencies.
 - Repeating the same status transition raises ValueError.
 - Unknown ticket IDs raise KeyError.
 - Assignment does not automatically change ticket status.
+
+## Ticket Queries and Reporting
+
+### Functions
+- list_tickets(tickets)
+- get_open_work_queue(tickets)
+- get_ticket_report(tickets)
+
+### Design Decisions
+- Ticket listing uses ascending numeric ticket IDs.
+- The open work queue excludes in-progress and resolved tickets.
+- Open tickets are ordered by priority, highest first.
+- Tickets with equal priority are ordered by ascending ticket ID.
+- Reports count tickets by status and priority.
+- Empty reports include all categories with zero counts.
+- Query functions do not modify stored tickets.
