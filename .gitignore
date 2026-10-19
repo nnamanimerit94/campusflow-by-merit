@@ -10,6 +10,8 @@ __pycache__/
 
 # Runtime data
 data/tickets.json
+tickets.json
+tickets-backup.json
 
 # Editor and operating system files
 .vscode/
