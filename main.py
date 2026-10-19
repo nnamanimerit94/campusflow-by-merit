@@ -1,9 +1,6 @@
 from campusflow.tickets import create_ticket
 
-from campusflow.storage import (
-    load_tickets,
-    save_tickets,
-)
+from campusflow.storage import load_tickets, save_tickets
 
 from campusflow.validation import (
     validate_title,
@@ -37,11 +34,10 @@ def display_menu():
     print("2. View All Tickets")
     print("3. Assign Ticket")
     print("4. View Ticket Details")
-    print("5. Start Working on Ticket")
-    print("6. Resolve Ticket")
-    print("7. Reopen Ticket")
-    print("8. View Open Work Queue")
-    print("9. View Reports")
+    print("5. Update Ticket Status")
+    print("6. Reopen Ticket")
+    print("7. View Open Work Queue")
+    print("8. View Reports")
     print("0. Exit")
 
 
@@ -69,8 +65,13 @@ def save_changes(tickets):
 
 
 def main():
+
     try:
         tickets = load_tickets(FILE_PATH)
+
+        if not isinstance(tickets, dict):
+            print("Unable to start CampusFlow: ticket data must be a dictionary.")
+            return
 
     except (ValueError, OSError) as error:
         print(f"Unable to start CampusFlow: {error}")
@@ -142,12 +143,13 @@ def main():
                         title,
                         category,
                         urgency,
-                        affected_users,
+                        affected_users
                     )
 
                     if save_changes(tickets):
                         print("\nTicket created successfully!")
                         display_ticket(ticket)
+
                     else:
                         tickets.pop(ticket["id"], None)
                         print("Ticket creation was not saved.")
@@ -167,7 +169,12 @@ def main():
                     print("\n--- All Tickets ---")
 
                     for ticket in all_tickets:
-                        display_ticket(ticket)
+                        print(
+                            f"{ticket['id']} | "
+                            f"{ticket['title']} | "
+                            f"Priority: {ticket['priority']} | "
+                            f"Status: {ticket['status']}"
+                        )
 
             # ASSIGN TICKET
             elif choice == "3":
@@ -205,47 +212,21 @@ def main():
 
                 try:
                     ticket = find_ticket(tickets, ticket_id)
-
                     display_ticket(ticket)
 
                 except KeyError:
                     print("Ticket not found.")
 
-            # START WORKING ON TICKET
+            # UPDATE TICKET STATUS
             elif choice == "5":
 
                 ticket_id = input(
                     "Enter ticket ID: "
                 ).strip().upper()
 
-                try:
-                    ticket = find_ticket(tickets, ticket_id)
-
-                    old_status = ticket["status"]
-
-                    update_ticket_status(
-                        tickets,
-                        ticket_id,
-                        "in_progress",
-                    )
-
-                    if save_changes(tickets):
-                        print("\nTicket is now in progress!")
-                        display_ticket(ticket)
-
-                    else:
-                        ticket["status"] = old_status
-                        print("Status change was not saved.")
-
-                except (KeyError, ValueError, TypeError) as error:
-                    print(f"Error: {error}")
-
-            # RESOLVE TICKET
-            elif choice == "6":
-
-                ticket_id = input(
-                    "Enter ticket ID: "
-                ).strip().upper()
+                new_status = input(
+                    "Enter new status (in_progress/resolved): "
+                ).strip().lower()
 
                 try:
                     ticket = find_ticket(tickets, ticket_id)
@@ -255,11 +236,11 @@ def main():
                     update_ticket_status(
                         tickets,
                         ticket_id,
-                        "resolved",
+                        new_status
                     )
 
                     if save_changes(tickets):
-                        print("\nTicket resolved successfully!")
+                        print("\nTicket status updated successfully!")
                         display_ticket(ticket)
 
                     else:
@@ -270,7 +251,7 @@ def main():
                     print(f"Error: {error}")
 
             # REOPEN TICKET
-            elif choice == "7":
+            elif choice == "6":
 
                 ticket_id = input(
                     "Enter ticket ID: "
@@ -295,7 +276,7 @@ def main():
                     print(f"Error: {error}")
 
             # VIEW OPEN WORK QUEUE
-            elif choice == "8":
+            elif choice == "7":
 
                 queue = get_open_work_queue(tickets)
 
@@ -314,7 +295,7 @@ def main():
                         )
 
             # VIEW REPORTS
-            elif choice == "9":
+            elif choice == "8":
 
                 report = get_ticket_report(tickets)
 
@@ -323,7 +304,7 @@ def main():
                 print(f"\nTotal Tickets: {report['total']}")
 
                 print("\nTickets by Status:")
-8
+
                 for status, count in report["by_status"].items():
                     print(f"{status}: {count}")
 
